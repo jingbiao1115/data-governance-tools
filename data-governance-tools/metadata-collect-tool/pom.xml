@@ -6,34 +6,14 @@
         <artifactId>data-governance-tools</artifactId>
         <groupId>com.jb</groupId>
         <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>metadata-collect-tool</artifactId>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>11</java.version>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
 
-        <lombok.version>1.18.20</lombok.version>
-        <validator.version>6.2.3.Final</validator.version>
-        <hutools.version>5.6.3</hutools.version>
-        <fastjson.version>2.0.10</fastjson.version>
-
-        <mysql.version>8.0.28</mysql.version>
-        <ojdbc8.version>19.7.0.0</ojdbc8.version>
-        <postgresql.version>42.2.14</postgresql.version>
-        <sqljdbc4.version>4.0</sqljdbc4.version>
-        <kingbase8.version>8.2</kingbase8.version>
-        <gbasedbt8s.version>8.0</gbasedbt8s.version>
-
-        <hive.version>2.1.1</hive.version>
-        <hbase.version>2.1.1</hbase.version>
-        <phoenix.version>5.0.0-HBase-2.0</phoenix.version>
-
-        <hadoop3.version>3.3.1</hadoop3.version>
 
     </properties>
 
@@ -43,27 +23,22 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>${validator.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.4</version>
+            <version>${commons.langs.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>${fastjson.version}</version>
         </dependency>
-
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
@@ -76,25 +51,21 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
             <artifactId>ojdbc8</artifactId>
             <version>${ojdbc8.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>${postgresql.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>sqljdbc4</artifactId>
             <version>${sqljdbc4.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.kingbase8</groupId>
             <artifactId>kingbase8</artifactId>
@@ -113,7 +84,6 @@
             <artifactId>hadoop-hdfs</artifactId>
             <version>${hadoop3.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-mapreduce-client-core</artifactId>
@@ -147,18 +117,6 @@
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-common</artifactId>
-            <version>${hadoop3.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-yarn-server-resourcemanager</artifactId>
-            <version>${hadoop3.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-yarn-registry</artifactId>
             <version>${hadoop3.version}</version>
         </dependency>
 
@@ -277,7 +235,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <version>3.2.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -289,14 +247,14 @@
                 <configuration>
 
                     <!-- 使用 <artifactSet> 可以将整个 jar 包都过滤掉 -->
-                    <!--                    <artifactSet>-->
-                    <!--                        <excludes>-->
-                    <!--                            <exclude>org.apache.flink:force-shading</exclude>-->
-                    <!--                            <exclude>com.google.code.findbugs:jsr305</exclude>-->
-                    <!--                            <exclude>org.slf4j:*</exclude>-->
-                    <!--                            <exclude>log4j:*</exclude>-->
-                    <!--                        </excludes>-->
-                    <!--                    </artifactSet>-->
+<!--                    <artifactSet>-->
+<!--                        <excludes>-->
+<!--                            <exclude>org.apache.flink:force-shading</exclude>-->
+<!--                            <exclude>com.google.code.findbugs:jsr305</exclude>-->
+<!--                            <exclude>org.slf4j:*</exclude>-->
+<!--                            <exclude>log4j:*</exclude>-->
+<!--                        </excludes>-->
+<!--                    </artifactSet>-->
 
                     <!-- 打包时将 jar 包中的内容排除。以 groupId:artifactId 为标识，使用 <include> 和 <exclude>，既可以移除代码文件，也可以移除配置文件。 -->
                     <!--                    <filters>-->
@@ -332,5 +290,6 @@
 
         </plugins>
     </build>
+
 
 </project>

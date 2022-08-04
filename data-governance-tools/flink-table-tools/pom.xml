@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>data-governance-tools</artifactId>
+        <groupId>com.jb</groupId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>flink-table-tools</artifactId>
+
+
+    <dependencies>
+
+        <!--flink相关依赖-->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.flink</groupId>-->
+<!--            <artifactId>flink-clients</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.flink</groupId>-->
+<!--            <artifactId>flink-table-api-java-bridge</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.flink</groupId>-->
+<!--            <artifactId>flink-runtime</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.flink</groupId>-->
+<!--            <artifactId>flink-table-runtime</artifactId>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.flink</groupId>-->
+<!--            <artifactId>flink-table-planner-loader</artifactId>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
+
+    </dependencies>
+
+    <build>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+
+                    <!-- 使用 <artifactSet> 可以将整个 jar 包都过滤掉 -->
+                    <artifactSet>
+                        <excludes>
+                            <exclude>org.apache.flink:force-shading</exclude>
+                            <exclude>com.google.code.findbugs:jsr305</exclude>
+                            <exclude>org.slf4j:*</exclude>
+                            <exclude>log4j:*</exclude>
+                        </excludes>
+                    </artifactSet>
+
+                    <!-- 打包时将 jar 包中的内容排除。以 groupId:artifactId 为标识，使用 <include> 和 <exclude>，既可以移除代码文件，也可以移除配置文件。 -->
+                    <filters>
+                        <filter>
+                            <!-- groupId:artifactId -->
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <!-- Do not copy the signatures in the META-INF folder.
+                                Otherwise, this might cause SecurityExceptions when using the JAR. -->
+                                <exclude>META-INF/*.SF</exclude>
+                                <exclude>META-INF/*.DSA</exclude>
+                                <exclude>META-INF/*.RSA</exclude>
+                                <exclude>META-INF/maven/**</exclude>
+                                <exclude>**/META-INF/maven/**</exclude>
+                                <!-- Globally exclude log4j.properties from our JAR files. -->
+                                <exclude>log4j.properties</exclude>
+                                <exclude>log4j2.properties</exclude>
+                                <exclude>log4j-test.properties</exclude>
+                                <exclude>log4j2-test.properties</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+
+                    <transformers>
+                        <!--  &lt;!&ndash; 指定打包时的 main 函数 &ndash;&gt;-->
+                        <transformer
+                                implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                            <mainClass></mainClass>
+                        </transformer>
+                    </transformers>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+</project>

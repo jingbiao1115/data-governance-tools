@@ -1,5 +1,6 @@
 package com.jb.enity.metadata.elasticsearch.index.properties;
 
+import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 
 /**
@@ -15,15 +16,9 @@ public class ElasticsearchPropertiesMeta {
     private String  fieldName;
 
     /**
-     * 字段类型
+     * 字段信息
      */
-    private String fieldType;
-
-    /**
-     * 时间字段格式
-     */
-    private String format;
-
+    private JSONObject fieldInfo;
 
 
 }

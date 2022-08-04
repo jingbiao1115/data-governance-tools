@@ -1,6 +1,7 @@
 package com.jb.adapter.relational;
 
 
+import com.jb.adapter.IMetadataDriver;
 import com.jb.enity.metadata.relational.RelationalCatalogMeta;
 
 import java.sql.SQLException;
@@ -10,12 +11,8 @@ import java.util.List;
  * @author zhaojb
  * 关系型数据库-元数据采集适配
  */
-public interface ICatalogSchemaMetadataDriver {
+public interface ICatalogSchemaMetadataDriver extends IMetadataDriver {
 
-    /**
-     * 创建数据库连接
-     */
-    void createConnection() throws SQLException, ClassNotFoundException;
 
     /**
      * 连接元数据
@@ -52,9 +49,5 @@ public interface ICatalogSchemaMetadataDriver {
      */
     RelationalMetadataAdapter getViewDefinition() throws SQLException;
 
-    /**
-     * 关闭连接
-     */
-     void close() ;
 
 }

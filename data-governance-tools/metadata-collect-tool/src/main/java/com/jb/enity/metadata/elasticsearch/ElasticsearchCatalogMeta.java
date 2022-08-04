@@ -19,16 +19,6 @@ public class ElasticsearchCatalogMeta {
      */
     private String esHost;
 
-    /**
-     * 用户名
-     */
-    private String username;
-
-
-    /**
-     * 密码
-     */
-    private String password;
 
     /**
      * 索引

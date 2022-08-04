@@ -2,6 +2,8 @@ package com.jb.factory;
 
 
 import com.alibaba.fastjson.JSON;
+import com.jb.adapter.elasticsearch.IElasticSearchMetadataDriver;
+import com.jb.adapter.elasticsearch.impl.ElasticSearchMetadataDriver;
 import com.jb.adapter.hadoop.IHBaseMetadataDriver;
 import com.jb.adapter.hadoop.IHiveMetadataDriver;
 import com.jb.adapter.hadoop.IPhoenixHBaseMetadataDriver;
@@ -10,10 +12,12 @@ import com.jb.adapter.hadoop.impl.HiveMetadataDriver;
 import com.jb.adapter.hadoop.impl.PhoenixHBaseMetadataDriver;
 import com.jb.adapter.relational.ICatalogSchemaMetadataDriver;
 import com.jb.adapter.relational.impl.*;
+import com.jb.enity.metadata.elasticsearch.ElasticsearchCatalogMeta;
 import com.jb.enity.metadata.hadoop.hbase.HBaseCatalogMeta;
 import com.jb.enity.metadata.hadoop.hbase.phoenix.PhoenixHBaseCatalogMeta;
 import com.jb.enity.metadata.hadoop.hive.HiveCatalogMeta;
 import com.jb.enity.metadata.relational.RelationalCatalogMeta;
+import com.jb.enity.parameter.ElasticSearch.ElasticSearchParameter;
 import com.jb.enity.parameter.IParameter;
 import com.jb.enity.parameter.hadoop.HBaseParameter;
 import com.jb.enity.parameter.hadoop.HiveParameter;
@@ -99,7 +103,6 @@ public class CollectMetadata {
     }
 
 
-
     public static HiveCatalogMeta collectHive() {
         HiveParameter parameter = new HiveParameter();
         parameter.setIp("10.10.14.117");
@@ -124,7 +127,7 @@ public class CollectMetadata {
         return getAllObjectByHBase(parameter,null);
     }
 
-    public static PhoenixHBaseCatalogMeta collectPhoenixHBase(){
+    public static PhoenixHBaseCatalogMeta collectPhoenixHBase() {
         PhoenixHBaseParameter parameter = new PhoenixHBaseParameter();
         parameter.setHdfsUrl("hdfs://bigdatanode01-dev.csii.cn:8020/hbase/data/SCHEMA1");
         parameter.setRootDir("hdfs://bigdatanode01-dev.csii.cn:8020/hbase");
@@ -136,8 +139,17 @@ public class CollectMetadata {
         return getAllObjectByPhoenixHBase(parameter,null,null);
     }
 
+    public static ElasticsearchCatalogMeta collectElasticSearch(){
+        ElasticSearchParameter parameter = new ElasticSearchParameter();
+        parameter.setHost("http://10.10.14.171:9200");
+        parameter.setUsername("elastic");
+        parameter.setPassword("UlAmuLqPu3GvllvZUugd");
+
+        return getAllObjectElasticSearch(parameter,null);
+    }
+
     public static void main(String[] args) {
-        System.out.println(JSON.toJSON(collectPhoenixHBase()));
+        System.out.println(JSON.toJSON(collectElasticSearch()));
     }
 
     /**
@@ -213,7 +225,7 @@ public class CollectMetadata {
 
             return driver.getCatalogSchemaMeta();
 
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
             assert driver != null;
@@ -279,7 +291,8 @@ public class CollectMetadata {
     }
 
 
-    public static PhoenixHBaseCatalogMeta getAllObjectByPhoenixHBase(PhoenixHBaseParameter parameter,List<String> tableNames,List<String> viewNames) {
+    public static PhoenixHBaseCatalogMeta getAllObjectByPhoenixHBase(
+            PhoenixHBaseParameter parameter,List<String> tableNames,List<String> viewNames) {
 
         IPhoenixHBaseMetadataDriver driver = new PhoenixHBaseMetadataDriver(parameter);
 
@@ -291,12 +304,28 @@ public class CollectMetadata {
             //获取表,字段,主键,索引信息
             return driver.getTables(tableNames).getTableColumns().getCreateTable().getPrimaryKeys().getIndexInfos().getViews(viewNames).getViewColumns().getHadoopCatalogMeta().getPhoenixHBaseCatalogMeta();
 
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            driver.close();
+        }
+    }
+
+    public static ElasticsearchCatalogMeta getAllObjectElasticSearch(
+            ElasticSearchParameter parameter,List<String> indexs) {
+
+        IElasticSearchMetadataDriver driver = new ElasticSearchMetadataDriver(parameter);
+
+        try {
+            driver.createConnection();
+
+            return driver.getIndexMetas(indexs).getIndexProperties().getCatalogMeta().getElasticsearchCatalogMeta();
+
         }catch (Exception e){
             throw new RuntimeException(e);
         }finally {
             driver.close();
         }
-
     }
 
 }
